@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLanguage, Language } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,9 +9,10 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
+import DataManagement from '@/components/settings/DataManagement';
 
 export default function Settings() {
-  const { language, changeLanguage, t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { user } = useAuth();
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -19,7 +20,7 @@ export default function Settings() {
   const handleLanguageChange = (value: string) => {
     // Make sure we only pass valid Language values
     if (value === 'en' || value === 'fr' || value === 'ar') {
-      changeLanguage(value as Language);
+      setLanguage(value as any);
       toast({
         title: t('languageChanged'),
         description: t('languageChangedDescription'),
@@ -41,7 +42,10 @@ export default function Settings() {
           <TabsTrigger value="general">{t('general')}</TabsTrigger>
           <TabsTrigger value="account">{t('account')}</TabsTrigger>
           <TabsTrigger value="notifications">{t('notifications')}</TabsTrigger>
+          <TabsTrigger value="data">{t('dataManagement')}</TabsTrigger>
         </TabsList>
+        
+        {/* General Tab */}
         <TabsContent value="general" className="space-y-4">
           <Card>
             <CardHeader>
@@ -87,6 +91,7 @@ export default function Settings() {
           </Card>
         </TabsContent>
 
+        {/* Account Tab */}
         <TabsContent value="account" className="space-y-4">
           <Card>
             <CardHeader>
@@ -102,7 +107,7 @@ export default function Settings() {
                   <Input
                     type="text"
                     id="name"
-                    defaultValue={user?.firstName}
+                    defaultValue={user?.name || ''}
                     className="mt-1"
                   />
                 </div>
@@ -111,7 +116,7 @@ export default function Settings() {
                   <Input
                     type="email"
                     id="email"
-                    defaultValue={user?.email}
+                    defaultValue={user?.email || ''}
                     className="mt-1"
                     disabled
                   />
@@ -166,6 +171,7 @@ export default function Settings() {
           </Card>
         </TabsContent>
 
+        {/* Notifications Tab */}
         <TabsContent value="notifications" className="space-y-4">
           <Card>
             <CardHeader>
@@ -199,6 +205,11 @@ export default function Settings() {
               <p>{t('pushNotificationsAreComingSoon')}</p>
             </CardContent>
           </Card>
+        </TabsContent>
+        
+        {/* Data Management Tab */}
+        <TabsContent value="data" className="space-y-4">
+          <DataManagement />
         </TabsContent>
       </Tabs>
     </div>

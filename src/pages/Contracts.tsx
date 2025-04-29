@@ -1,7 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { contracts, customers, vehicles, Contract } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -13,16 +12,39 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useForm } from 'react-hook-form';
 import { Plus, Search, FileText } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { getLocalData, saveLocalData } from '@/utils/localStorageManager';
+import { Contract } from '@/data/mockData';
 
 export default function Contracts() {
   const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
-  const [contractsList, setContractsList] = useState<Contract[]>(contracts);
+  const [contractsList, setContractsList] = useState<Contract[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [vehicles, setVehicles] = useState<any[]>([]);
 
   const form = useForm();
+
+  // Load data from local storage
+  useEffect(() => {
+    const contractsData = getLocalData('CONTRACTS');
+    const customersData = getLocalData('CUSTOMERS');
+    const vehiclesData = getLocalData('VEHICLES');
+    
+    // Parse dates in contracts data
+    const parsedContracts = contractsData ? contractsData.map((contract: any) => ({
+      ...contract,
+      startDate: new Date(contract.startDate),
+      endDate: new Date(contract.endDate),
+      createdAt: new Date(contract.createdAt)
+    })) : [];
+    
+    setContractsList(parsedContracts);
+    setCustomers(customersData || []);
+    setVehicles(vehiclesData || []);
+  }, []);
 
   const filteredContracts = contractsList.filter(contract => 
     contract.id.toLowerCase().includes(searchTerm.toLowerCase())
