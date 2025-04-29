@@ -1,4 +1,3 @@
-
 export interface Vehicle {
   id: string;
   licensePlate: string;
@@ -88,7 +87,7 @@ export const vehicles: Vehicle[] = [
     image: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
     vin: '1HGCM82633A123456',
     lastMaintenance: '2023-01-15',
-    nextMaintenance: '2023-07-15',
+    nextMaintenance: '2023-06-02', // Soon!
     documents: [
       { id: 'd1', name: 'Insurance Policy', type: 'insurance', url: '#', uploadDate: '2023-01-01', expiryDate: '2023-12-31' },
       { id: 'd2', name: 'Vehicle Registration', type: 'registration', url: '#', uploadDate: '2023-01-01', expiryDate: '2024-01-01' }
@@ -104,7 +103,7 @@ export const vehicles: Vehicle[] = [
     status: 'rented',
     fuelType: 'petrol',
     transmission: 'automatic',
-    mileage: 22000,
+    mileage: 24500, // Close to 25000, needs oil change
     dailyRate: 70,
     image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
     vin: '1HGCR2631GA123456',
@@ -292,5 +291,37 @@ export const dashboardStats = {
     { status: 'rented', count: vehicles.filter(v => v.status === 'rented').length },
     { status: 'maintenance', count: vehicles.filter(v => v.status === 'maintenance').length },
     { status: 'reserved', count: vehicles.filter(v => v.status === 'reserved').length },
+  ],
+  recentActivities: [
+    {
+      id: 'a1',
+      type: 'contract',
+      description: 'New contract created for John Smith',
+      time: '2 hours ago'
+    },
+    {
+      id: 'a2',
+      type: 'vehicle',
+      description: 'Vehicle ABC-1234 marked as available',
+      time: '3 hours ago'
+    },
+    {
+      id: 'a3',
+      type: 'maintenance',
+      description: 'Scheduled maintenance for XYZ-5678',
+      time: '5 hours ago'
+    },
+    {
+      id: 'a4',
+      type: 'customer',
+      description: 'New customer Jane Doe registered',
+      time: '1 day ago'
+    },
+    {
+      id: 'a5',
+      type: 'contract',
+      description: 'Contract #C1003 completed and returned',
+      time: '1 day ago'
+    }
   ]
 };

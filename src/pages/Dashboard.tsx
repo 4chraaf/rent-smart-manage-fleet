@@ -8,6 +8,7 @@ import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { UpcomingReturns } from '@/components/dashboard/UpcomingReturns';
 import { dashboardStats } from '@/data/mockData';
 import { Car, DollarSign, FileText, BarChart } from 'lucide-react';
+import { MaintenanceAlerts } from '@/components/dashboard/MaintenanceAlerts';
 
 export default function Dashboard() {
   const { t } = useLanguage();
@@ -49,6 +50,9 @@ export default function Dashboard() {
         />
       </div>
 
+      {/* Maintenance Alerts */}
+      <MaintenanceAlerts className="w-full" />
+
       {/* Charts and Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <RevenueChart
@@ -63,7 +67,7 @@ export default function Dashboard() {
 
       {/* Activity and Upcoming Returns */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentActivity />
+        <RecentActivity activities={dashboardStats.recentActivities} />
         <UpcomingReturns />
       </div>
     </div>
