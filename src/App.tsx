@@ -12,6 +12,12 @@ import Layout from "@/components/Layout";
 // Pages
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Vehicles from "./pages/Vehicles";
+import Contracts from "./pages/Contracts";
+import Customers from "./pages/Customers";
+import Finances from "./pages/Finances";
+import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,35 +41,34 @@ const App = () => (
                 </ProtectedRoute>
               } />
               
-              {/* Additional routes - to be expanded */}
               <Route path="/vehicles" element={
                 <ProtectedRoute>
-                  <NotFound />
+                  <Vehicles />
                 </ProtectedRoute>
               } />
               <Route path="/contracts" element={
                 <ProtectedRoute>
-                  <NotFound />
+                  <Contracts />
                 </ProtectedRoute>
               } />
               <Route path="/customers" element={
                 <ProtectedRoute>
-                  <NotFound />
+                  <Customers />
                 </ProtectedRoute>
               } />
               <Route path="/finances" element={
                 <ProtectedRoute>
-                  <NotFound />
+                  <Finances />
                 </ProtectedRoute>
               } />
               <Route path="/reports" element={
                 <ProtectedRoute>
-                  <NotFound />
+                  <Reports />
                 </ProtectedRoute>
               } />
               <Route path="/settings" element={
                 <ProtectedRoute>
-                  <NotFound />
+                  <Settings />
                 </ProtectedRoute>
               } />
               

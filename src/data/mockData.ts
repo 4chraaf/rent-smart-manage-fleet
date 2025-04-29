@@ -1,327 +1,631 @@
-export interface Vehicle {
+
+// Mock data for testing and development
+
+export const dashboardStats = {
+  totalVehicles: 24,
+  availableVehicles: 16,
+  totalRevenue: 38420,
+  activeContracts: 8,
+  utilizationRate: 67,
+  
+  // Revenue data for charts
+  monthlyRevenue: [
+    { month: 'Jan', revenue: 4200 },
+    { month: 'Feb', revenue: 3800 },
+    { month: 'Mar', revenue: 5100 },
+    { month: 'Apr', revenue: 4800 },
+    { month: 'May', revenue: 5600 },
+    { month: 'Jun', revenue: 6200 },
+  ],
+  
+  // Vehicle status breakdown
+  vehicleStatusBreakdown: [
+    { status: 'available', count: 16 },
+    { status: 'rented', count: 8 },
+    { status: 'maintenance', count: 3 },
+    { status: 'reserved', count: 2 },
+  ],
+
+  // Sample recent activities
+  recentActivities: [
+    { 
+      id: '1',
+      type: 'contract' as const, 
+      description: 'New rental contract created for Toyota Camry', 
+      time: '2 hours ago' 
+    },
+    { 
+      id: '2', 
+      type: 'vehicle' as const, 
+      description: 'Chevrolet Cruze returned from maintenance', 
+      time: '4 hours ago' 
+    },
+    { 
+      id: '3', 
+      type: 'maintenance' as const, 
+      description: 'Oil change scheduled for Nissan Altima', 
+      time: '6 hours ago' 
+    },
+    { 
+      id: '4', 
+      type: 'customer' as const, 
+      description: 'New customer John Doe registered', 
+      time: '1 day ago' 
+    },
+  ],
+
+  // Vehicle maintenance alerts
+  maintenanceAlerts: [
+    {
+      id: 'maint1',
+      vehicleId: 'v001',
+      vehicleName: 'Toyota Camry 2020',
+      licensePlate: 'ABC123',
+      alertType: 'oil',
+      currentMileage: 9800,
+      serviceDueMileage: 10000,
+      status: 'upcoming',
+      dueDate: new Date(2025, 4, 10) // May 10, 2025
+    },
+    {
+      id: 'maint2',
+      vehicleId: 'v002',
+      vehicleName: 'Honda Civic 2021',
+      licensePlate: 'XYZ789',
+      alertType: 'tire',
+      currentMileage: 20400,
+      serviceDueMileage: 20000,
+      status: 'overdue',
+      dueDate: new Date(2025, 4, 2) // May 2, 2025
+    },
+    {
+      id: 'maint3',
+      vehicleId: 'v003',
+      vehicleName: 'Ford Escape 2019',
+      licensePlate: 'LMN456',
+      alertType: 'brake',
+      currentMileage: 15200,
+      serviceDueMileage: 15000,
+      status: 'overdue',
+      dueDate: new Date(2025, 4, 5) // May 5, 2025
+    }
+  ]
+};
+
+// Vehicle mock data
+export const vehicles = [
+  {
+    id: 'v001',
+    make: 'Toyota',
+    model: 'Camry',
+    year: 2020,
+    licensePlate: 'ABC123',
+    vin: '1HGCM82633A123456',
+    status: 'available',
+    currentMileage: 9800,
+    purchaseDate: new Date(2019, 11, 15),
+    purchasePrice: 28000,
+    currentValue: 22400,
+    dailyRate: 65,
+    weeklyRate: 390,
+    monthlyRate: 1500,
+    fuelType: 'gasoline',
+    transmission: 'automatic',
+    category: 'sedan',
+    seats: 5,
+    color: 'silver',
+    photos: ['/vehicles/camry-1.jpg', '/vehicles/camry-2.jpg'],
+    documents: [
+      { id: 'd001', name: 'Registration', url: '/documents/camry-reg.pdf', type: 'registration' },
+      { id: 'd002', name: 'Insurance', url: '/documents/camry-ins.pdf', type: 'insurance' }
+    ],
+    maintenanceHistory: [
+      {
+        id: 'mh001',
+        type: 'oil',
+        description: 'Oil and filter change',
+        date: new Date(2025, 1, 15),
+        mileage: 7500,
+        cost: 45,
+        provider: 'QuickLube Service'
+      },
+      {
+        id: 'mh002',
+        type: 'tire',
+        description: 'Tire rotation',
+        date: new Date(2025, 3, 10),
+        mileage: 9000,
+        cost: 30,
+        provider: 'City Tire Shop'
+      }
+    ],
+    nextService: {
+      type: 'oil',
+      dueMileage: 10000,
+      dueDate: new Date(2025, 4, 10)
+    }
+  },
+  {
+    id: 'v002',
+    make: 'Honda',
+    model: 'Civic',
+    year: 2021,
+    licensePlate: 'XYZ789',
+    vin: '2HGES16536H123456',
+    status: 'rented',
+    currentMileage: 20400,
+    purchaseDate: new Date(2020, 9, 5),
+    purchasePrice: 23000,
+    currentValue: 19550,
+    dailyRate: 55,
+    weeklyRate: 330,
+    monthlyRate: 1300,
+    fuelType: 'gasoline',
+    transmission: 'automatic',
+    category: 'compact',
+    seats: 5,
+    color: 'blue',
+    photos: ['/vehicles/civic-1.jpg', '/vehicles/civic-2.jpg'],
+    documents: [
+      { id: 'd003', name: 'Registration', url: '/documents/civic-reg.pdf', type: 'registration' },
+      { id: 'd004', name: 'Insurance', url: '/documents/civic-ins.pdf', type: 'insurance' }
+    ],
+    maintenanceHistory: [
+      {
+        id: 'mh003',
+        type: 'oil',
+        description: 'Oil and filter change',
+        date: new Date(2025, 2, 5),
+        mileage: 17500,
+        cost: 45,
+        provider: 'Honda Dealership'
+      }
+    ],
+    nextService: {
+      type: 'tire',
+      dueMileage: 20000,
+      dueDate: new Date(2025, 4, 2)
+    }
+  },
+  {
+    id: 'v003',
+    make: 'Ford',
+    model: 'Escape',
+    year: 2019,
+    licensePlate: 'LMN456',
+    vin: '1FMCU0F70DUB12345',
+    status: 'maintenance',
+    currentMileage: 15200,
+    purchaseDate: new Date(2018, 7, 22),
+    purchasePrice: 31000,
+    currentValue: 18600,
+    dailyRate: 75,
+    weeklyRate: 450,
+    monthlyRate: 1700,
+    fuelType: 'hybrid',
+    transmission: 'automatic',
+    category: 'suv',
+    seats: 5,
+    color: 'red',
+    photos: ['/vehicles/escape-1.jpg', '/vehicles/escape-2.jpg'],
+    documents: [
+      { id: 'd005', name: 'Registration', url: '/documents/escape-reg.pdf', type: 'registration' },
+      { id: 'd006', name: 'Insurance', url: '/documents/escape-ins.pdf', type: 'insurance' }
+    ],
+    maintenanceHistory: [
+      {
+        id: 'mh004',
+        type: 'oil',
+        description: 'Oil and filter change',
+        date: new Date(2025, 1, 10),
+        mileage: 12000,
+        cost: 55,
+        provider: 'Ford Dealership'
+      }
+    ],
+    nextService: {
+      type: 'brake',
+      dueMileage: 15000,
+      dueDate: new Date(2025, 4, 5)
+    }
+  }
+];
+
+// Customer mock data
+export const customers = [
+  {
+    id: 'c001',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    phone: '555-123-4567',
+    address: '123 Main St, Anytown, ST 12345',
+    licenseNumber: 'DL1234567',
+    licenseState: 'CA',
+    licenseExpiry: new Date(2026, 6, 15),
+    dateOfBirth: new Date(1985, 5, 12),
+    joinDate: new Date(2023, 1, 10),
+    status: 'active',
+    documents: [
+      { id: 'cd001', name: 'Driver License', url: '/documents/john-dl.pdf', type: 'license' },
+      { id: 'cd002', name: 'Insurance Card', url: '/documents/john-insurance.pdf', type: 'insurance' }
+    ],
+    notes: 'Preferred customer, always returns vehicles on time.',
+    rentalHistory: [
+      {
+        id: 'r001',
+        vehicleId: 'v001',
+        contractId: 'co001',
+        startDate: new Date(2024, 1, 5),
+        endDate: new Date(2024, 1, 8),
+        returned: true,
+        onTime: true,
+        condition: 'good'
+      }
+    ]
+  },
+  {
+    id: 'c002',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    email: 'jane.smith@example.com',
+    phone: '555-987-6543',
+    address: '456 Oak Ave, Othertown, ST 67890',
+    licenseNumber: 'DL7654321',
+    licenseState: 'NY',
+    licenseExpiry: new Date(2025, 9, 20),
+    dateOfBirth: new Date(1990, 8, 23),
+    joinDate: new Date(2023, 4, 15),
+    status: 'active',
+    documents: [
+      { id: 'cd003', name: 'Driver License', url: '/documents/jane-dl.pdf', type: 'license' }
+    ],
+    notes: 'Corporate account client',
+    rentalHistory: [
+      {
+        id: 'r002',
+        vehicleId: 'v002',
+        contractId: 'co002',
+        startDate: new Date(2025, 3, 10),
+        endDate: new Date(2025, 3, 20),
+        returned: false,
+        onTime: null,
+        condition: null
+      }
+    ]
+  }
+];
+
+// Contract mock data
+export const contracts = [
+  {
+    id: 'co001',
+    customerId: 'c001',
+    vehicleId: 'v001',
+    startDate: new Date(2024, 1, 5),
+    endDate: new Date(2024, 1, 8),
+    status: 'completed',
+    baseRate: 65,
+    dailyRate: 65,
+    daysRented: 3,
+    subtotal: 195,
+    taxes: 15.60,
+    fees: 25,
+    discounts: 0,
+    totalAmount: 235.60,
+    depositAmount: 200,
+    depositReturned: true,
+    paymentMethod: 'credit',
+    paymentStatus: 'paid',
+    mileageOut: 9500,
+    mileageIn: 9800,
+    fuelOut: 'full',
+    fuelIn: 'full',
+    notes: 'Vehicle returned in good condition',
+    documents: [
+      { id: 'cod001', name: 'Rental Agreement', url: '/contracts/co001-agreement.pdf', type: 'agreement' },
+      { id: 'cod002', name: 'Vehicle Inspection', url: '/contracts/co001-inspection.pdf', type: 'inspection' }
+    ]
+  },
+  {
+    id: 'co002',
+    customerId: 'c002',
+    vehicleId: 'v002',
+    startDate: new Date(2025, 3, 10),
+    endDate: new Date(2025, 3, 20),
+    status: 'active',
+    baseRate: 55,
+    dailyRate: 55,
+    daysRented: 10,
+    subtotal: 550,
+    taxes: 44,
+    fees: 35,
+    discounts: 50,
+    totalAmount: 579,
+    depositAmount: 300,
+    depositReturned: false,
+    paymentMethod: 'credit',
+    paymentStatus: 'paid',
+    mileageOut: 20000,
+    mileageIn: null,
+    fuelOut: 'full',
+    fuelIn: null,
+    notes: 'Corporate rental',
+    documents: [
+      { id: 'cod003', name: 'Rental Agreement', url: '/contracts/co002-agreement.pdf', type: 'agreement' }
+    ]
+  }
+];
+
+// Financial transactions mock data
+export const finances = {
+  income: [
+    {
+      id: 'i001',
+      date: new Date(2025, 1, 8),
+      amount: 235.60,
+      type: 'rental',
+      description: 'Payment for contract #CO001',
+      contractId: 'co001',
+      vehicleId: 'v001',
+      customerId: 'c001',
+      paymentMethod: 'credit',
+      category: 'rental_fee',
+      recorded_by: 'user1'
+    },
+    {
+      id: 'i002',
+      date: new Date(2025, 3, 10),
+      amount: 579,
+      type: 'rental',
+      description: 'Payment for contract #CO002',
+      contractId: 'co002',
+      vehicleId: 'v002',
+      customerId: 'c002',
+      paymentMethod: 'credit',
+      category: 'rental_fee',
+      recorded_by: 'user1'
+    }
+  ],
+  expenses: [
+    {
+      id: 'e001',
+      date: new Date(2025, 1, 15),
+      amount: 45,
+      type: 'maintenance',
+      description: 'Oil change for Toyota Camry',
+      vehicleId: 'v001',
+      vendor: 'QuickLube Service',
+      receiptUrl: '/expenses/e001-receipt.pdf',
+      category: 'maintenance',
+      isRecurring: false,
+      recorded_by: 'user1'
+    },
+    {
+      id: 'e002',
+      date: new Date(2025, 3, 1),
+      amount: 1200,
+      type: 'insurance',
+      description: 'Monthly fleet insurance payment',
+      vehicleId: null, // General expense, not tied to specific vehicle
+      vendor: 'ABC Insurance',
+      receiptUrl: '/expenses/e002-receipt.pdf',
+      category: 'insurance',
+      isRecurring: true,
+      recurringFrequency: 'monthly',
+      recorded_by: 'user1'
+    }
+  ],
+  summary: {
+    currentMonth: {
+      totalIncome: 579,
+      totalExpenses: 1200,
+      netProfit: -621
+    },
+    previousMonth: {
+      totalIncome: 235.60,
+      totalExpenses: 45,
+      netProfit: 190.60
+    },
+    yearToDate: {
+      totalIncome: 814.60,
+      totalExpenses: 1245,
+      netProfit: -430.40
+    }
+  }
+};
+
+// Users mock data
+export const users = [
+  {
+    id: 'user1',
+    firstName: 'Admin',
+    lastName: 'User',
+    email: 'admin@example.com',
+    role: 'admin',
+    lastLogin: new Date(2025, 3, 29, 8, 30),
+    status: 'active'
+  },
+  {
+    id: 'user2',
+    firstName: 'Manager',
+    lastName: 'User',
+    email: 'manager@example.com',
+    role: 'manager',
+    lastLogin: new Date(2025, 3, 28, 17, 15),
+    status: 'active'
+  },
+  {
+    id: 'user3',
+    firstName: 'Agent',
+    lastName: 'User',
+    email: 'agent@example.com',
+    role: 'agent',
+    lastLogin: new Date(2025, 3, 29, 10, 45),
+    status: 'active'
+  }
+];
+
+// Define types for our models
+export type VehicleStatus = 'available' | 'rented' | 'maintenance' | 'reserved' | 'sold';
+export type ActivityType = 'maintenance' | 'contract' | 'vehicle' | 'customer';
+
+export interface Activity {
   id: string;
+  type: ActivityType;
+  description: string;
+  time: string;
+}
+
+export type MaintenanceAlertType = 'oil' | 'tire' | 'brake' | 'general' | 'inspection';
+export type MaintenanceAlertStatus = 'upcoming' | 'overdue' | 'scheduled';
+
+export interface MaintenanceAlert {
+  id: string;
+  vehicleId: string;
+  vehicleName: string;
   licensePlate: string;
-  make: string;
-  model: string;
-  year: number;
-  color: string;
-  status: 'available' | 'rented' | 'maintenance' | 'reserved';
-  fuelType: 'petrol' | 'diesel' | 'electric' | 'hybrid';
-  transmission: 'manual' | 'automatic';
+  alertType: MaintenanceAlertType;
+  currentMileage: number;
+  serviceDueMileage: number;
+  status: MaintenanceAlertStatus;
+  dueDate: Date;
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  type: string;
+  description: string;
+  date: Date;
   mileage: number;
-  dailyRate: number;
-  image?: string;
-  vin?: string;
-  lastMaintenance?: string;
-  nextMaintenance?: string;
-  documents?: Document[];
-  rentalHistory?: RentalHistory[];
+  cost: number;
+  provider: string;
 }
 
 export interface Document {
   id: string;
   name: string;
-  type: 'insurance' | 'registration' | 'maintenance' | 'other';
   url: string;
-  uploadDate: string;
-  expiryDate?: string;
+  type: string;
 }
 
-export interface RentalHistory {
+export interface Vehicle {
   id: string;
-  contractId: string;
-  customerId: string;
-  customerName: string;
-  startDate: string;
-  endDate: string;
-  totalAmount: number;
-  status: 'active' | 'completed' | 'cancelled';
+  make: string;
+  model: string;
+  year: number;
+  licensePlate: string;
+  vin: string;
+  status: VehicleStatus;
+  currentMileage: number;
+  purchaseDate: Date;
+  purchasePrice: number;
+  currentValue: number;
+  dailyRate: number;
+  weeklyRate: number;
+  monthlyRate: number;
+  fuelType: string;
+  transmission: string;
+  category: string;
+  seats: number;
+  color: string;
+  photos: string[];
+  documents: Document[];
+  maintenanceHistory: MaintenanceRecord[];
+  nextService: {
+    type: string;
+    dueMileage: number;
+    dueDate: Date;
+  };
 }
 
 export interface Customer {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   address: string;
   licenseNumber: string;
-  licenseExpiry: string;
-  nationality: string;
-  isBlacklisted: boolean;
-  blacklistReason?: string;
-  rentalCount: number;
-  totalSpent: number;
-  createdAt: string;
-  avatar?: string;
+  licenseState: string;
+  licenseExpiry: Date;
+  dateOfBirth: Date;
+  joinDate: Date;
+  status: string;
+  documents: Document[];
+  notes: string;
+  rentalHistory: RentalHistoryItem[];
+}
+
+export interface RentalHistoryItem {
+  id: string;
+  vehicleId: string;
+  contractId: string;
+  startDate: Date;
+  endDate: Date;
+  returned: boolean;
+  onTime: boolean | null;
+  condition: string | null;
 }
 
 export interface Contract {
   id: string;
-  vehicleId: string;
   customerId: string;
-  startDate: string;
-  endDate: string;
-  status: 'active' | 'scheduled' | 'completed' | 'overdue';
-  rentalAmount: number;
-  deposit: number;
-  isPaid: boolean;
-  notes?: string;
-  createdAt: string;
-  createdBy: string;
+  vehicleId: string;
+  startDate: Date;
+  endDate: Date;
+  status: string;
+  baseRate: number;
+  dailyRate: number;
+  daysRented: number;
+  subtotal: number;
+  taxes: number;
+  fees: number;
+  discounts: number;
+  totalAmount: number;
+  depositAmount: number;
+  depositReturned: boolean;
+  paymentMethod: string;
+  paymentStatus: string;
+  mileageOut: number;
+  mileageIn: number | null;
+  fuelOut: string;
+  fuelIn: string | null;
+  notes: string;
+  documents: Document[];
 }
 
-// Sample vehicle data
-export const vehicles: Vehicle[] = [
-  {
-    id: '1',
-    licensePlate: 'ABC-1234',
-    make: 'Toyota',
-    model: 'Camry',
-    year: 2022,
-    color: 'Silver',
-    status: 'available',
-    fuelType: 'petrol',
-    transmission: 'automatic',
-    mileage: 15000,
-    dailyRate: 75,
-    image: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-    vin: '1HGCM82633A123456',
-    lastMaintenance: '2023-01-15',
-    nextMaintenance: '2023-06-02', // Soon!
-    documents: [
-      { id: 'd1', name: 'Insurance Policy', type: 'insurance', url: '#', uploadDate: '2023-01-01', expiryDate: '2023-12-31' },
-      { id: 'd2', name: 'Vehicle Registration', type: 'registration', url: '#', uploadDate: '2023-01-01', expiryDate: '2024-01-01' }
-    ]
-  },
-  {
-    id: '2',
-    licensePlate: 'XYZ-5678',
-    make: 'Honda',
-    model: 'Accord',
-    year: 2021,
-    color: 'Black',
-    status: 'rented',
-    fuelType: 'petrol',
-    transmission: 'automatic',
-    mileage: 24500, // Close to 25000, needs oil change
-    dailyRate: 70,
-    image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-    vin: '1HGCR2631GA123456',
-    lastMaintenance: '2023-02-10',
-    nextMaintenance: '2023-08-10',
-    documents: [
-      { id: 'd3', name: 'Insurance Policy', type: 'insurance', url: '#', uploadDate: '2023-01-15', expiryDate: '2023-12-31' },
-      { id: 'd4', name: 'Vehicle Registration', type: 'registration', url: '#', uploadDate: '2023-01-15', expiryDate: '2024-01-15' }
-    ]
-  },
-  {
-    id: '3',
-    licensePlate: 'DEF-9012',
-    make: 'Nissan',
-    model: 'Altima',
-    year: 2020,
-    color: 'White',
-    status: 'maintenance',
-    fuelType: 'petrol',
-    transmission: 'automatic',
-    mileage: 35000,
-    dailyRate: 65,
-    image: 'https://images.unsplash.com/photo-1549275301-c9d60941dc72?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-    vin: '1N4BL4EV5KC123456',
-    lastMaintenance: '2023-03-05',
-    nextMaintenance: '2023-09-05',
-    documents: [
-      { id: 'd5', name: 'Insurance Policy', type: 'insurance', url: '#', uploadDate: '2023-01-20', expiryDate: '2023-12-31' },
-      { id: 'd6', name: 'Maintenance Record', type: 'maintenance', url: '#', uploadDate: '2023-03-05' }
-    ]
-  },
-  {
-    id: '4',
-    licensePlate: 'GHI-3456',
-    make: 'Ford',
-    model: 'Fusion',
-    year: 2022,
-    color: 'Blue',
-    status: 'reserved',
-    fuelType: 'hybrid',
-    transmission: 'automatic',
-    mileage: 18000,
-    dailyRate: 80,
-    image: 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-    vin: '3FA6P0G72KR123456',
-    lastMaintenance: '2023-02-20',
-    nextMaintenance: '2023-08-20',
-    documents: [
-      { id: 'd7', name: 'Insurance Policy', type: 'insurance', url: '#', uploadDate: '2023-01-10', expiryDate: '2023-12-31' },
-      { id: 'd8', name: 'Vehicle Registration', type: 'registration', url: '#', uploadDate: '2023-01-10', expiryDate: '2024-01-10' }
-    ]
-  },
-  {
-    id: '5',
-    licensePlate: 'JKL-7890',
-    make: 'Chevrolet',
-    model: 'Malibu',
-    year: 2021,
-    color: 'Red',
-    status: 'available',
-    fuelType: 'petrol',
-    transmission: 'automatic',
-    mileage: 25000,
-    dailyRate: 68,
-    image: 'https://images.unsplash.com/photo-1612911912304-5c9014ecbd48?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250&q=80',
-    vin: '1G1ZD5ST3JF123456',
-    lastMaintenance: '2023-03-15',
-    nextMaintenance: '2023-09-15',
-    documents: [
-      { id: 'd9', name: 'Insurance Policy', type: 'insurance', url: '#', uploadDate: '2023-01-05', expiryDate: '2023-12-31' },
-      { id: 'd10', name: 'Vehicle Registration', type: 'registration', url: '#', uploadDate: '2023-01-05', expiryDate: '2024-01-05' }
-    ]
-  }
-];
+export interface FinancialTransaction {
+  id: string;
+  date: Date;
+  amount: number;
+  type: string;
+  description: string;
+  vehicleId: string | null;
+  recorded_by: string;
+}
 
-// Sample customer data
-export const customers: Customer[] = [
-  {
-    id: '1',
-    name: 'John Smith',
-    email: 'john.smith@example.com',
-    phone: '+1234567890',
-    address: '123 Main St, Anytown, USA',
-    licenseNumber: 'DL123456789',
-    licenseExpiry: '2025-06-30',
-    nationality: 'USA',
-    isBlacklisted: false,
-    rentalCount: 5,
-    totalSpent: 1850,
-    createdAt: '2022-10-15',
-    avatar: 'https://randomuser.me/api/portraits/men/42.jpg'
-  },
-  {
-    id: '2',
-    name: 'Jane Doe',
-    email: 'jane.doe@example.com',
-    phone: '+1987654321',
-    address: '456 Elm St, Somewhere, USA',
-    licenseNumber: 'DL987654321',
-    licenseExpiry: '2024-08-15',
-    nationality: 'Canada',
-    isBlacklisted: false,
-    rentalCount: 3,
-    totalSpent: 1120,
-    createdAt: '2022-11-20',
-    avatar: 'https://randomuser.me/api/portraits/women/65.jpg'
-  },
-  {
-    id: '3',
-    name: 'Robert Johnson',
-    email: 'robert.j@example.com',
-    phone: '+1567891234',
-    address: '789 Oak St, Elsewhere, USA',
-    licenseNumber: 'DL567891234',
-    licenseExpiry: '2023-12-10',
-    nationality: 'USA',
-    isBlacklisted: true,
-    blacklistReason: 'Damaged vehicle without reporting',
-    rentalCount: 1,
-    totalSpent: 450,
-    createdAt: '2023-01-05',
-    avatar: 'https://randomuser.me/api/portraits/men/22.jpg'
-  }
-];
+export interface Income extends FinancialTransaction {
+  contractId: string;
+  customerId: string;
+  paymentMethod: string;
+  category: string;
+}
 
-// Sample contract data
-export const contracts: Contract[] = [
-  {
-    id: 'C1001',
-    vehicleId: '2',
-    customerId: '1',
-    startDate: '2023-04-10',
-    endDate: '2023-04-17',
-    status: 'active',
-    rentalAmount: 490,
-    deposit: 200,
-    isPaid: true,
-    notes: 'Customer requested child seat',
-    createdAt: '2023-04-09',
-    createdBy: 'Agent Smith'
-  },
-  {
-    id: 'C1002',
-    vehicleId: '4',
-    customerId: '2',
-    startDate: '2023-04-15',
-    endDate: '2023-04-20',
-    status: 'scheduled',
-    rentalAmount: 400,
-    deposit: 200,
-    isPaid: false,
-    createdAt: '2023-04-01',
-    createdBy: 'Agent Johnson'
-  },
-  {
-    id: 'C1003',
-    vehicleId: '5',
-    customerId: '1',
-    startDate: '2023-03-20',
-    endDate: '2023-03-25',
-    status: 'completed',
-    rentalAmount: 340,
-    deposit: 200,
-    isPaid: true,
-    createdAt: '2023-03-19',
-    createdBy: 'Agent Smith'
-  }
-];
+export interface Expense extends FinancialTransaction {
+  vendor: string;
+  receiptUrl: string;
+  category: string;
+  isRecurring: boolean;
+  recurringFrequency?: string;
+}
 
-// Dashboard statistics data
-export const dashboardStats = {
-  totalVehicles: vehicles.length,
-  availableVehicles: vehicles.filter(v => v.status === 'available').length,
-  totalRevenue: 12500,
-  activeContracts: contracts.filter(c => c.status === 'active').length,
-  utilizationRate: 68,
-  monthlyRevenue: [
-    { month: 'Jan', revenue: 8200 },
-    { month: 'Feb', revenue: 9100 },
-    { month: 'Mar', revenue: 11500 },
-    { month: 'Apr', revenue: 12500 },
-  ],
-  vehicleStatusBreakdown: [
-    { status: 'available', count: vehicles.filter(v => v.status === 'available').length },
-    { status: 'rented', count: vehicles.filter(v => v.status === 'rented').length },
-    { status: 'maintenance', count: vehicles.filter(v => v.status === 'maintenance').length },
-    { status: 'reserved', count: vehicles.filter(v => v.status === 'reserved').length },
-  ],
-  recentActivities: [
-    {
-      id: 'a1',
-      type: 'contract',
-      description: 'New contract created for John Smith',
-      time: '2 hours ago'
-    },
-    {
-      id: 'a2',
-      type: 'vehicle',
-      description: 'Vehicle ABC-1234 marked as available',
-      time: '3 hours ago'
-    },
-    {
-      id: 'a3',
-      type: 'maintenance',
-      description: 'Scheduled maintenance for XYZ-5678',
-      time: '5 hours ago'
-    },
-    {
-      id: 'a4',
-      type: 'customer',
-      description: 'New customer Jane Doe registered',
-      time: '1 day ago'
-    },
-    {
-      id: 'a5',
-      type: 'contract',
-      description: 'Contract #C1003 completed and returned',
-      time: '1 day ago'
-    }
-  ]
-};
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  lastLogin: Date;
+  status: string;
+}
