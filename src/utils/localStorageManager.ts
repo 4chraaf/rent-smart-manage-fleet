@@ -25,7 +25,8 @@ export const initLocalStorage = () => {
         ...contract,
         startDate: contract.startDate.toISOString(),
         endDate: contract.endDate.toISOString(),
-        createdAt: contract.createdAt.toISOString()
+        // Only add createdAt if it exists
+        ...(contract.createdAt && { createdAt: contract.createdAt.toISOString() })
       }))
     ));
   }
@@ -115,3 +116,4 @@ export const importFromCSV = async (key: keyof typeof STORAGE_KEYS, file: File):
     reader.readAsText(file);
   });
 };
+
