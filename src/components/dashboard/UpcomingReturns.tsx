@@ -27,8 +27,8 @@ const upcomingReturns: Return[] = contracts
     return {
       contractId: contract.id,
       vehicleName: vehicle ? `${vehicle.make} ${vehicle.model} (${vehicle.licensePlate})` : 'Unknown Vehicle',
-      customerName: customer ? customer.name : 'Unknown Customer',
-      returnDate: contract.endDate,
+      customerName: customer ? `${customer.firstName} ${customer.lastName}` : 'Unknown Customer',
+      returnDate: contract.endDate.toLocaleDateString(),
       daysLeft: daysLeft,
     };
   })

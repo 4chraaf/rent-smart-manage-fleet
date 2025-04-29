@@ -15,11 +15,11 @@ interface MaintenanceAlertsProps {
 export function MaintenanceAlerts({ className }: MaintenanceAlertsProps) {
   const { t } = useLanguage();
   
-  // Filter vehicles that need maintenance soon (next 14 days) or oil change (based on mileage)
+  // Filter vehicles that need maintenance soon (next 14 days) based on nextService
   const vehiclesNeedingMaintenance = vehicles.filter(vehicle => {
-    if (!vehicle.nextMaintenance) return false;
+    if (!vehicle.nextService?.dueDate) return false;
     
-    const nextMaintenanceDate = new Date(vehicle.nextMaintenance);
+    const nextMaintenanceDate = new Date(vehicle.nextService.dueDate);
     const today = new Date();
     const twoWeeksFromNow = new Date();
     twoWeeksFromNow.setDate(today.getDate() + 14);
@@ -30,7 +30,7 @@ export function MaintenanceAlerts({ className }: MaintenanceAlertsProps) {
 
   // Filter vehicles that need oil change based on mileage (every 5000 km)
   const vehiclesNeedingOilChange = vehicles.filter(vehicle => {
-    return vehicle.mileage % 5000 >= 4500; // Oil change needed when within 500km of 5000km interval
+    return vehicle.currentMileage % 5000 >= 4500; // Oil change needed when within 500km of 5000km interval
   });
   
   const hasAlerts = vehiclesNeedingMaintenance.length > 0 || vehiclesNeedingOilChange.length > 0;
@@ -51,7 +51,7 @@ export function MaintenanceAlerts({ className }: MaintenanceAlertsProps) {
                 <AlertTitle className="flex items-center gap-2">
                   {t('scheduledMaintenance')}
                   <Badge variant="outline" className="ml-2">
-                    {new Date(vehicle.nextMaintenance!).toLocaleDateString()}
+                    {new Date(vehicle.nextService.dueDate).toLocaleDateString()}
                   </Badge>
                 </AlertTitle>
                 <AlertDescription className="pt-2">
@@ -62,7 +62,7 @@ export function MaintenanceAlerts({ className }: MaintenanceAlertsProps) {
                       </p>
                       <div className="flex items-center gap-4 mt-1 text-sm">
                         <span className="flex items-center gap-1">
-                          <MapPin className="h-3 w-3" /> {vehicle.mileage} km
+                          <MapPin className="h-3 w-3" /> {vehicle.currentMileage} km
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" /> {vehicle.year}
@@ -83,7 +83,7 @@ export function MaintenanceAlerts({ className }: MaintenanceAlertsProps) {
                 <AlertTitle className="flex items-center gap-2">
                   {t('oilChangeRequired')}
                   <Badge variant="outline" className="ml-2">
-                    {vehicle.mileage} km
+                    {vehicle.currentMileage} km
                   </Badge>
                 </AlertTitle>
                 <AlertDescription className="pt-2">

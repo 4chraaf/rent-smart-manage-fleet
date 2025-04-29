@@ -1,4 +1,3 @@
-
 // Mock data for testing and development
 
 export const dashboardStats = {
@@ -92,8 +91,172 @@ export const dashboardStats = {
   ]
 };
 
+// Define types for our models
+export type VehicleStatus = 'available' | 'rented' | 'maintenance' | 'reserved' | 'sold';
+export type ActivityType = 'maintenance' | 'contract' | 'vehicle' | 'customer';
+
+export interface Activity {
+  id: string;
+  type: ActivityType;
+  description: string;
+  time: string;
+}
+
+export type MaintenanceAlertType = 'oil' | 'tire' | 'brake' | 'general' | 'inspection';
+export type MaintenanceAlertStatus = 'upcoming' | 'overdue' | 'scheduled';
+
+export interface MaintenanceAlert {
+  id: string;
+  vehicleId: string;
+  vehicleName: string;
+  licensePlate: string;
+  alertType: MaintenanceAlertType;
+  currentMileage: number;
+  serviceDueMileage: number;
+  status: MaintenanceAlertStatus;
+  dueDate: Date;
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  type: string;
+  description: string;
+  date: Date;
+  mileage: number;
+  cost: number;
+  provider: string;
+}
+
+export interface Document {
+  id: string;
+  name: string;
+  url: string;
+  type: string;
+}
+
+export interface Vehicle {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  licensePlate: string;
+  vin: string;
+  status: VehicleStatus;
+  currentMileage: number;
+  purchaseDate: Date;
+  purchasePrice: number;
+  currentValue: number;
+  dailyRate: number;
+  weeklyRate: number;
+  monthlyRate: number;
+  fuelType: string;
+  transmission: string;
+  category: string;
+  seats: number;
+  color: string;
+  photos: string[];
+  documents: Document[];
+  maintenanceHistory: MaintenanceRecord[];
+  nextService: {
+    type: string;
+    dueMileage: number;
+    dueDate: Date;
+  };
+}
+
+export interface Customer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  licenseNumber: string;
+  licenseState: string;
+  licenseExpiry: Date;
+  dateOfBirth: Date;
+  joinDate: Date;
+  status: string;
+  documents: Document[];
+  notes: string;
+  rentalHistory: RentalHistoryItem[];
+}
+
+export interface RentalHistoryItem {
+  id: string;
+  vehicleId: string;
+  contractId: string;
+  startDate: Date;
+  endDate: Date;
+  returned: boolean;
+  onTime: boolean | null;
+  condition: string | null;
+}
+
+export interface Contract {
+  id: string;
+  customerId: string;
+  vehicleId: string;
+  startDate: Date;
+  endDate: Date;
+  status: string;
+  baseRate: number;
+  dailyRate: number;
+  daysRented: number;
+  subtotal: number;
+  taxes: number;
+  fees: number;
+  discounts: number;
+  totalAmount: number;
+  depositAmount: number;
+  depositReturned: boolean;
+  paymentMethod: string;
+  paymentStatus: string;
+  mileageOut: number;
+  mileageIn: number | null;
+  fuelOut: string;
+  fuelIn: string | null;
+  notes: string;
+  documents: Document[];
+}
+
+export interface FinancialTransaction {
+  id: string;
+  date: Date;
+  amount: number;
+  type: string;
+  description: string;
+  vehicleId: string | null;
+  recorded_by: string;
+}
+
+export interface Income extends FinancialTransaction {
+  contractId: string;
+  customerId: string;
+  paymentMethod: string;
+  category: string;
+}
+
+export interface Expense extends FinancialTransaction {
+  vendor: string;
+  receiptUrl: string;
+  category: string;
+  isRecurring: boolean;
+  recurringFrequency?: string;
+}
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  lastLogin: Date;
+  status: string;
+}
+
 // Vehicle mock data
-export const vehicles = [
+export const vehicles: Vehicle[] = [
   {
     id: 'v001',
     make: 'Toyota',
@@ -465,167 +628,3 @@ export const users = [
     status: 'active'
   }
 ];
-
-// Define types for our models
-export type VehicleStatus = 'available' | 'rented' | 'maintenance' | 'reserved' | 'sold';
-export type ActivityType = 'maintenance' | 'contract' | 'vehicle' | 'customer';
-
-export interface Activity {
-  id: string;
-  type: ActivityType;
-  description: string;
-  time: string;
-}
-
-export type MaintenanceAlertType = 'oil' | 'tire' | 'brake' | 'general' | 'inspection';
-export type MaintenanceAlertStatus = 'upcoming' | 'overdue' | 'scheduled';
-
-export interface MaintenanceAlert {
-  id: string;
-  vehicleId: string;
-  vehicleName: string;
-  licensePlate: string;
-  alertType: MaintenanceAlertType;
-  currentMileage: number;
-  serviceDueMileage: number;
-  status: MaintenanceAlertStatus;
-  dueDate: Date;
-}
-
-export interface MaintenanceRecord {
-  id: string;
-  type: string;
-  description: string;
-  date: Date;
-  mileage: number;
-  cost: number;
-  provider: string;
-}
-
-export interface Document {
-  id: string;
-  name: string;
-  url: string;
-  type: string;
-}
-
-export interface Vehicle {
-  id: string;
-  make: string;
-  model: string;
-  year: number;
-  licensePlate: string;
-  vin: string;
-  status: VehicleStatus;
-  currentMileage: number;
-  purchaseDate: Date;
-  purchasePrice: number;
-  currentValue: number;
-  dailyRate: number;
-  weeklyRate: number;
-  monthlyRate: number;
-  fuelType: string;
-  transmission: string;
-  category: string;
-  seats: number;
-  color: string;
-  photos: string[];
-  documents: Document[];
-  maintenanceHistory: MaintenanceRecord[];
-  nextService: {
-    type: string;
-    dueMileage: number;
-    dueDate: Date;
-  };
-}
-
-export interface Customer {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  licenseNumber: string;
-  licenseState: string;
-  licenseExpiry: Date;
-  dateOfBirth: Date;
-  joinDate: Date;
-  status: string;
-  documents: Document[];
-  notes: string;
-  rentalHistory: RentalHistoryItem[];
-}
-
-export interface RentalHistoryItem {
-  id: string;
-  vehicleId: string;
-  contractId: string;
-  startDate: Date;
-  endDate: Date;
-  returned: boolean;
-  onTime: boolean | null;
-  condition: string | null;
-}
-
-export interface Contract {
-  id: string;
-  customerId: string;
-  vehicleId: string;
-  startDate: Date;
-  endDate: Date;
-  status: string;
-  baseRate: number;
-  dailyRate: number;
-  daysRented: number;
-  subtotal: number;
-  taxes: number;
-  fees: number;
-  discounts: number;
-  totalAmount: number;
-  depositAmount: number;
-  depositReturned: boolean;
-  paymentMethod: string;
-  paymentStatus: string;
-  mileageOut: number;
-  mileageIn: number | null;
-  fuelOut: string;
-  fuelIn: string | null;
-  notes: string;
-  documents: Document[];
-}
-
-export interface FinancialTransaction {
-  id: string;
-  date: Date;
-  amount: number;
-  type: string;
-  description: string;
-  vehicleId: string | null;
-  recorded_by: string;
-}
-
-export interface Income extends FinancialTransaction {
-  contractId: string;
-  customerId: string;
-  paymentMethod: string;
-  category: string;
-}
-
-export interface Expense extends FinancialTransaction {
-  vendor: string;
-  receiptUrl: string;
-  category: string;
-  isRecurring: boolean;
-  recurringFrequency?: string;
-}
-
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  lastLogin: Date;
-  status: string;
-}
